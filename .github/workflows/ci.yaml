@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches: [ "master"]
+    paths-ignore:
+      - "README.md"
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        directory: [ "./backend" ]
+    name: 🎉 Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ matrix.directory }}/.nvmrc
+      - name: 📦 Install dependencies
+        working-directory: ${{ matrix.directory }}
+        run: npm ci
+      - name: Linter
+        working-directory: ${{ matrix.directory }}
+        run: npm run lint
+      - name: Test
+        working-directory: ${{ matrix.directory }}
+        run: npm test
+      
