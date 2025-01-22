@@ -3,7 +3,12 @@ import { evaluate as evaluateMathjs } from 'mathjs';
 import { CommandAndResult } from "./entities/command-result.entity";
 import { IRepository } from "./repositories";
 
-class CommandService {
+export interface ICommandService {
+    evaluateAndSave(clientId: string, expression: string): Promise<string>;
+    getHistory(clientId: string): Promise<CommandAndResult[]>;
+}
+
+class CommandService implements ICommandService {
     private operators = new Set(['+', '-', '*', '/']);
     private repository: IRepository;
     private logger: Logger;

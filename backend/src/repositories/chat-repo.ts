@@ -46,7 +46,7 @@ class ChatRepo implements IRepository {
     public async getLatest(clientId: string): Promise<CommandAndResult[]> {
         const chatSession = await this.db_client.findOne({ clientId });
         if (!chatSession) {
-            throw new Error("Chat session not found");
+            return [];
         }
         return chatSession.history;
     }

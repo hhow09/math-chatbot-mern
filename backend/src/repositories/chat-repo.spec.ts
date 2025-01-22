@@ -39,8 +39,9 @@ describe("ChatRepo", () => {
         expect(history2).toEqual([expected[1]]);
     });
 
-    it("should throw an error if the chat session is not found", async () => {
-        await expect(repo.getLatest(clientId)).rejects.toThrow("Chat session not found");
+    it("should return an empty array if the chat session is not found", async () => {
+        const history = await repo.getLatest(clientId);
+        expect(history).toEqual([]);
     });
     
 

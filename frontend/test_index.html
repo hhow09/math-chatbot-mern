@@ -1,46 +1,66 @@
-<!-- https://github.com/socketio/socket.io-minimal-example/blob/main/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Socket.IO Fiddle</title>
-  </head>
-
-  <body>
-    <h2>Status: <span id="status">Disconnected</span></h2>
-    <h2>Messages:</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+</head>
+<body>
     <ul id="messages"></ul>
-
+    <form id="chat-form">
+        <input id="chat-input" type="text" autocomplete="off">
+        <button>Send</button>
+    </form>
+    <button id="history-button">History</button>
+    <ul id="history"></ul>
+    
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script>
-      const status = document.getElementById("status");
-      const messages = document.getElementById("messages");
+    <script >
+      const socket = io('http://localhost:3000');
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('chat-input');
+      const messages = document.getElementById('messages');
 
-      const appendMessage = (content) => {
-        const item = document.createElement("li");
-        item.textContent = content;
+      form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (input.value) {
+              socket.emit('operation', input.value);
+              appendMessage(`You: ${input.value}`, 'blue');
+              input.value = '';
+          }
+      });
+
+      socket.on('result', (msg) => {
+          appendMessage(`Bot: ${msg}`, 'green');
+      });
+
+      socket.on('error', (error) => {
+          appendMessage(`Bot: [Error] ${error}`, 'red');
+      });
+
+      function appendMessage(message, color) {
+        const item = document.createElement('li');
+        item.textContent = message;
+        item.style.color = color;
         messages.appendChild(item);
-      };
+        window.scrollTo(0, document.body.scrollHeight);
+      }
 
-      const socket = io("http://localhost:3000");
-
-      socket.on("connect", () => {
-        status.innerText = "Connected";
-        appendMessage(`event: connect | session id: ${socket.id}`);
+      const historyButton = document.getElementById('history-button');
+      
+      historyButton.addEventListener('click', () => {
+          socket.emit('history');
+          socket.on('history', (history) => {
+              const historyList = document.getElementById('history');
+              historyList.innerHTML = '';
+              history.forEach(item => {
+                  const li = document.createElement('li');
+                  li.textContent = `${item.expression} = ${item.result}`;
+                  historyList.appendChild(li);
+              });
+          });
       });
 
-      socket.on("connect_error", (err) => {
-        appendMessage(`event: connect_error | reason: ${err.message}`);
-      });
-
-      socket.on("disconnect", (reason) => {
-        status.innerText = "Disconnected";
-        appendMessage(`event: disconnect | reason: ${reason}`);
-      });
-
-      socket.onAny((event, ...args) => {
-        appendMessage(`event: ${event} | arguments: ${args}`);
-      });
     </script>
-  </body>
+</body>
 </html>
