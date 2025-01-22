@@ -15,3 +15,10 @@ npm run start
 ```bash
 npm run test
 ```
+
+## Limitations on calculation
+- All whitespace is ignored, therefore `1 + 2 3` will consider as `1 + 23`
+- negative sign in expression is not supported: e.g. `5 * -3` will return error.
+- large number will be converted to exponential notation: e.g. `999999999999 * 999999999999` will return `9.99999999998e+23`
+    - default threshold of exponent is `20`
+    - ref: https://mikemcl.github.io/decimal.js/#precision

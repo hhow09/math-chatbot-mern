@@ -1,0 +1,108 @@
+import { Decimal } from "decimal.js";
+
+// ExpressionMD is a mathematical expression only contains numbers, multiplication, division
+export class ExpressionMD {
+    public sign: boolean;
+    public exp: string;
+    constructor(sign: boolean, exp: string) {
+        this.sign = sign;
+        this.exp = exp;
+    }
+
+    // toFraction evaluate the expression and turn into a fraction
+    public toFraction(): Fraction {
+        let numerator = new Decimal(this.firstNumber());
+        if (!this.sign) {
+            numerator = numerator.neg();
+        }
+        let denominator = new Decimal(1);
+        const indexOfFirstOperator = this.firstNumber().length;
+        // only one number
+        if (indexOfFirstOperator === this.exp.length) {
+            return new Fraction(numerator, new Decimal(1));
+        }
+        let prevOp = this.exp[indexOfFirstOperator];
+        let currStr = "";
+        for (let i = indexOfFirstOperator + 1; i < this.exp.length; i++) {
+            if (this.exp[i] === '*' || this.exp[i] === '/') {
+                switch (prevOp) {
+                    case '*':
+                        numerator = numerator.mul(new Decimal(currStr));
+                        break;
+                    case '/':
+                        denominator = denominator.mul(new Decimal(currStr));
+                        break;
+                    default:
+                        throw new Error('Invalid operator');
+                }
+                prevOp = this.exp[i];
+                currStr = "";
+            }else{
+                currStr += this.exp[i];
+            }
+        }
+        // last one
+        if (prevOp === '*') {
+            numerator = numerator.mul(new Decimal(currStr));
+        } else if (prevOp === '/') {
+            denominator = denominator.mul(new Decimal(currStr));
+        } else {
+            throw new Error('Invalid operator');
+        }
+
+        return new Fraction(numerator, denominator);
+    }
+
+    // firstNumber return the first number in the expression
+    private firstNumber(): string {
+        for (let i = 0; i < this.exp.length; i++) {
+            if (this.exp[i] === '*') {
+                return this.exp.substring(0, i);
+            }
+            if (this.exp[i] === '/') {
+                return this.exp.substring(0, i);
+            }
+        }
+        return this.exp;
+    }
+}
+
+export class Fraction {
+    public numerator: Decimal;
+    public denominator: Decimal;
+
+    constructor(numerator: Decimal, denominator: Decimal) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    public add(f: Fraction): Fraction {
+        const lcm = getLcm(this.denominator, f.denominator);
+        const multiplyThis = lcm.div(this.denominator);
+        const multiplyF = lcm.div(f.denominator);
+        this.numerator = this.numerator.mul(multiplyThis);
+        this.denominator = lcm;
+        f.numerator = f.numerator.mul(multiplyF);
+        f.denominator = lcm;
+        const sum = this.numerator.add(f.numerator);
+        return new Fraction(sum, lcm);
+    }
+
+    public evaluate(): string {
+        return this.numerator.div(this.denominator).toString();
+    }
+}
+
+function getLcm(a: Decimal, b: Decimal): Decimal {
+    return a.mul(b).div(getGcd(a, b));
+}
+
+function getGcd(a: Decimal, b: Decimal): Decimal {
+    const max = Decimal.max(a, b);
+    const min = Decimal.min(a, b);
+    if (max.mod(min).eq(0)) {
+        return min;
+    } else {
+        return getGcd(max.mod(min), min);
+    }
+}
