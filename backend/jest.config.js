@@ -8,5 +8,6 @@ module.exports = {
     transform: {
       "^.+.tsx?$": ["ts-jest",{}],
     },
+    setupFiles: ["dotenv/config"]
   };
   

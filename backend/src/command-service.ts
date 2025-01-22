@@ -1,13 +1,7 @@
 import { Logger } from "pino";
 import { evaluate as evaluateMathjs } from 'mathjs';
 import { CommandAndResult } from "./entities/command-result.entity";
-
-interface IRepository {
-    saveCommand(clientId: string, command: string, result: string): void;
-    getLatest(clientId: string, count: number): CommandAndResult[];
-}
-
-const historyCount = 10;
+import { IRepository } from "./repositories";
 
 class CommandService {
     private operators = new Set(['+', '-', '*', '/']);
@@ -19,15 +13,15 @@ class CommandService {
     }
 
     // evaluateAndSave evaluates a mathematical expression and saves the result to the repository
-    public evaluateAndSave(clientId: string, expression: string): string {
+    public async evaluateAndSave(clientId: string, expression: string): Promise<string> {
         const result = this.evaluate(expression);
-        this.repository.saveCommand(clientId, expression, result);
+        await this.repository.saveCommand(clientId, expression, result);
         return result;
     }
     
     // getHistory returns the latest 10 commands for a client
-    public getHistory(clientId: string): CommandAndResult[] {
-        return this.repository.getLatest(clientId, historyCount);
+    public async getHistory(clientId: string): Promise<CommandAndResult[]> {
+        return this.repository.getLatest(clientId);
     }
 
     // evaluate evaluate a mathematical expression

@@ -6,8 +6,15 @@ const mockRepository = {
     getLatest: jest.fn(),
 };
 
+type TestCase = {
+    command: string;
+    expected?: string;
+    hasError?: boolean;
+};
+
 describe('evaluate', () => {
-    describe.each([
+    const logger = pino();
+    describe.each<TestCase>([
         { command: '', hasError: true },
         { command: ' ', hasError: true },
         { command: '1', expected: '1' },
@@ -30,13 +37,14 @@ describe('evaluate', () => {
         { command: '5 * 7 / 3 * 3', expected: '35' },
 
     ])('.evaluate($command)', ({ command, hasError, expected }) => {
-        test(`returns ${hasError}`, () => {
+        test(`returns ${hasError}`, async () => {
             const clientId = 'whatever';
-            const commandService = new CommandService(pino(), mockRepository);
+            const commandService = new CommandService(logger, mockRepository);
             if (hasError) {
-                expect(() => commandService.evaluateAndSave(clientId, command)).toThrow('Invalid command');
+                await expect(commandService.evaluateAndSave(clientId, command)).rejects.toThrow('Invalid command');
             } else {
-                expect(commandService.evaluateAndSave(clientId, command)).toBe(expected);
+                const res = await commandService.evaluateAndSave(clientId, command);
+                expect(res).toBe(expected);
                 expect(mockRepository.saveCommand).toHaveBeenCalledWith(clientId, command, expected);
             }
         });
