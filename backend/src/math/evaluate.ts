@@ -18,9 +18,8 @@ function isValidCommand(s: string): boolean {
             return false;
         }
     }
-
-    // operators cannot be at the beginning or end of the string
-    if (operators.has(s[0]) || operators.has(s[s.length - 1])) {
+    // operators cannot be at the end of the string
+    if (operators.has(s[s.length - 1])) {
         return false;
     }
     return true;
@@ -50,6 +49,10 @@ const parseExpressionMDs = (s: string): ExpressionMD[] => {
     const expressions: ExpressionMD[] = [];
     let currExp = "";
     let prevOp = true;
+    if (s[0] === '-') {
+        prevOp = false;
+        s = s.slice(1);
+    }
     for (const token of s.split('')) {
         if (token === '+') {
             expressions.push(new ExpressionMD(prevOp, currExp));

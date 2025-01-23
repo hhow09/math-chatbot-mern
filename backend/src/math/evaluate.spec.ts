@@ -29,7 +29,10 @@ describe('evaluate', () => {
         { command: '10.5 * 5 / 2.5', expected: '21' },
         { command: '.5 + 1', expected: '1.5' },
 
-
+        // negative sign at the beginning
+        { command: '-1', expected: '-1' },
+        { command: '-1 + 1', expected: '0' },
+        { command: '-5*3 + 1', expected: '-14' },
         // Zero cases
         { command: '0 * 5', expected: '0' },
         { command: '0 / 1', expected: '0' },
