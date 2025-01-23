@@ -16,7 +16,27 @@ npm run start
 npm run test
 ```
 
-## Limitations on calculation
+## Features
+- [x] It supports 2 types of operations requested via websocket
+    - `operation`: evaluate an expression and return the result.
+    - `history`: get the latest 10 commands and results.
+- [x] [Express](https://expressjs.com/) is used for the server and router.
+- [x] [Socket.io](https://socket.io/) is used for WebSocket communication.
+- [x] [MongoDB](https://www.mongodb.com/) is used for storing chat history.
+    - [Array $slice](https://www.mongodb.com/docs/manual/reference/operator/update/slice/) is used to keep only the latest history.
+- [x] [Jest](https://jestjs.io/) is used for unit testing.
+- [x] [Github Workflows](../.github/workflows/ci.yaml) is used for continuous integration.
+
+## Math Calculation
+### Evalutaion Algorithm
+1. Parse the expression string by splitting by `+` and `-`, resulting a list of sub-expressions (`ExpressionMD`).
+2. For each sub-expression, turn it into a `Fraction`.
+3. Sum all fractions by `Fraction.add(Fraction)`.
+    - It uses **lowest common multiple** to add fractions.
+    - [Decimal.js](https://mikemcl.github.io/decimal.js/) is used for the basic arithmetic operations.
+4. Evaluate the result by `Fraction.evaluate()`.
+
+### Limitations
 - All whitespace is ignored, therefore `1 + 2 3` will consider as `1 + 23`
 - `negative sign` is only allowed at the beginning of an expression but not after multiplication or division
     - e.g. `-5*3 + 1` will return `-14`

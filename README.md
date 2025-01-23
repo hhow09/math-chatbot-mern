@@ -17,3 +17,7 @@ link when you’re done.
 9. Using typescript will be a bonus.
 10. Please avoid using the eval-cmd of the JS math library
 11. The more effort you put into it (e.g. design wise, documentation wise) the better the rating will be.
+
+## How to start
+1. follow the instructions in [backend/README.md](backend/README.md#run-at-local) to start backend server
+2. follow the instructions in [frontend/README.md](frontend/README.md#run-at-local) to start frontend

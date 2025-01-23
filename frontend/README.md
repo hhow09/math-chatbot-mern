@@ -6,7 +6,7 @@ npm install
 cp .env.example .env # modify as needed
 ```
 
-## Start Locally
+## Run at Local
 ```
 npm run build
 npm run preview
