@@ -37,6 +37,7 @@ function evaluate(s: string): string {
     if (!first) {
         return "0"
     }
+    // early return
     if (exps.length === 0) {
         return first.evaluate()
     }

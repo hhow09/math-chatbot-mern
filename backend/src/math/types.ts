@@ -77,15 +77,15 @@ export class Fraction {
     }
 
     public add(f: Fraction): Fraction {
-        const lcm = getLcm(this.denominator, f.denominator);
-        const multiplyThis = lcm.div(this.denominator);
-        const multiplyF = lcm.div(f.denominator);
+        const commonDenominator = getLcm(this.denominator, f.denominator);
+        const multiplyThis = commonDenominator.div(this.denominator);
+        const multiplyF = commonDenominator.div(f.denominator);
         this.numerator = this.numerator.mul(multiplyThis);
-        this.denominator = lcm;
+        this.denominator = commonDenominator;
         f.numerator = f.numerator.mul(multiplyF);
-        f.denominator = lcm;
+        f.denominator = commonDenominator;
         const sum = this.numerator.add(f.numerator);
-        return new Fraction(sum, lcm);
+        return new Fraction(sum, commonDenominator);
     }
 
     public evaluate(): string {
