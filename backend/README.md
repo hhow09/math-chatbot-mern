@@ -24,8 +24,28 @@ npm run test
 - [x] [Socket.io](https://socket.io/) is used for WebSocket communication.
 - [x] [MongoDB](https://www.mongodb.com/) is used for storing chat history.
     - [Array $slice](https://www.mongodb.com/docs/manual/reference/operator/update/slice/) is used to keep only the latest history.
+    - `Index` is created on `clientId` for history command querying by `clientId`.
 - [x] [Jest](https://jestjs.io/) is used for unit testing.
 - [x] [Github Workflows](../.github/workflows/ci.yaml) is used for continuous integration.
+
+## Folder Structure
+```
+src
+├── app.spec.ts                     # integration test
+├── app.ts                          # main entry
+├── chat-server.ts                  # websocket server
+├── command-service.ts              # handle business logic
+├── entities
+│   └── command-result.entity.ts    # entity shared across components
+├── math                            # math calculation logic, pure functions
+│   ├── evaluate.spec.ts
+│   ├── evaluate.ts
+│   └── types.ts
+└── repositories                    # data access layer
+    ├── chat-repo.spec.ts
+    ├── chat-repo.ts
+    └── index.ts
+```
 
 ## Math Calculation
 ### Evalutaion Algorithm
