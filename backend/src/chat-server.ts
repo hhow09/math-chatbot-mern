@@ -60,7 +60,7 @@ export class ChatServer {
 
     public listen() {
         const httpServer = this.app.listen(this.port,
-            () => { console.log(`Server listening on port ${this.port}`) }
+            () => { this.logger.info(`Server listening on port ${this.port}`) }
         );
         
         // Express server and socket.io server is sharing the same http server
@@ -70,5 +70,10 @@ export class ChatServer {
             }
         });
         this.setupSocketHandler(io);
+        return async function close() {
+            httpServer.close();
+            await io.close();
+        }
     }
 }
+
