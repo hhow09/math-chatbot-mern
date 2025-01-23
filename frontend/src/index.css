@@ -1,0 +1,108 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* App */
+.status {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Chat Body */
+.chat {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.chat__mainHeader {
+  width: 100vw;
+  height: 5vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #F9F5EB;
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.message__container {
+  width: 100%;
+  height: 85vh;
+  background-color: #ffffff;
+  padding: 20px;
+  overflow-y: scroll;
+}
+
+/* for every message */
+.message__container > * {
+  margin-bottom: 5px;
+}
+
+.message {
+  display: flex;
+}
+
+.message__sender {
+  font-weight: bold;
+  width: 50px;
+
+  &.bot { 
+    color: #ff8400;
+  }
+
+  &.user {
+    color: #607EAA;
+  }
+}
+
+.message__content {
+ display: block;
+
+ &.result {
+  color: #000000;
+ }
+ &.history {
+  color: #323232;
+ }
+ &.error {
+  color: #ff0000;
+ }
+}
+
+/* Footer */
+.chat__footer {
+  width: 100%;
+  height: 10vh;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  background-color: #F9F5EB;
+  display: flex;
+  align-items: center;
+}
+
+.chat_input {
+  width: 100%;
+  height: 100%;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+
+
+.sendBtn {
+  width: 20vw;
+  background-color: green;
+  padding: 10px;
+  color: #EAE3D2;
+  cursor: pointer;
+}
+
+.sendBtn:hover {
+  background-color: rgb(129, 201, 129);
+}
