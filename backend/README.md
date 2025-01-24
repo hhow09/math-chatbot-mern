@@ -49,17 +49,18 @@ src
 
 ## Math Calculation
 ### Evalutaion Algorithm
-1. Parse the expression string by splitting by `+` and `-`, resulting a list of sub-expressions (`ExpressionMD`).
-2. For each sub-expression, turn it into a `Fraction`.
+1. Parse the expression string by splitting by `+` and `-`, resulting a list of sub-expressions (`Summand`).
+2. For each `Summand`, turn it into a `Fraction`.
 3. Sum all fractions by `Fraction.add(Fraction)`.
     - It uses **lowest common multiple** to add fractions.
     - [Decimal.js](https://mikemcl.github.io/decimal.js/) is used for the basic arithmetic operations.
 4. Evaluate the result by `Fraction.evaluate()`.
+    - result is converted to string to avoid overflow and keep precision.
 
 ### Example
 1. Input string: `5 / 3 / 4 * 9 - 2 * 3 / 8`
 2. Parse into sub-expressions: `5 / 3 / 4 * 9` and `-2 * 3 / 8`
-3. Turn these into fractions: $\frac{5 * 9}{3 * 4}$ and $-\frac{2 * 3}{8}$
+3. Turn them into fractions: $\frac{5 * 9}{3 * 4}$ and $-\frac{2 * 3}{8}$
 4. find equivalent fractions with same denominator: $\frac{90}{24}$ and $-\frac{18}{24}$
 5. Sum these fractions: $\frac{90}{24} - \frac{18}{24} = \frac{72}{24} = 3$
 

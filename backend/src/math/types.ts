@@ -1,7 +1,7 @@
 import { Decimal } from "decimal.js";
 
-// ExpressionMD is a mathematical expression only contains numbers, multiplication, division
-export class ExpressionMD {
+// Summand is a mathematical expression only contains numbers, multiplication, division
+export class Summand {
     public sign: boolean;
     public exp: string;
     constructor(sign: boolean, exp: string) {
@@ -21,6 +21,8 @@ export class ExpressionMD {
         if (indexOfFirstOperator === this.exp.length) {
             return new Fraction(numerator, new Decimal(1));
         }
+
+        // parse the expression of multiplication and division
         let prevOp = this.exp[indexOfFirstOperator];
         let currStr = "";
         for (let i = indexOfFirstOperator + 1; i < this.exp.length; i++) {

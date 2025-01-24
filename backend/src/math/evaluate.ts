@@ -1,4 +1,4 @@
-import { ExpressionMD } from './types';
+import { Summand } from './types';
 const operators = new Set(['+', '-', '*', '/']);
 
 // isValidCommand checks if the command is a allowed mathematical expression
@@ -32,22 +32,23 @@ function evaluate(s: string): string {
     }
     s = s.replace(/ /g,''); // remove all spaces
     
-    const exps = parseExpressionMDs(s).map(expMD => expMD.toFraction());
-    const first = exps.shift();
+    const summands = parseExpression(s);
+    const fractions = summands.map(expMD => expMD.toFraction());
+    const first = fractions.shift();
     if (!first) {
         return "0"
     }
     // early return
-    if (exps.length === 0) {
+    if (fractions.length === 0) {
         return first.evaluate()
     }
-    const result = exps.reduce((acc, expMD) =>  acc.add(expMD), first);
+    const result = fractions.reduce((acc, f) =>  acc.add(f), first);
     return result.evaluate().toString();
 }
 
-// parseExpressionMDs parse the expression into list of ExpressionMD
-const parseExpressionMDs = (s: string): ExpressionMD[] => {
-    const expressions: ExpressionMD[] = [];
+// parseExpression parse the expression into list of Summand
+const parseExpression = (s: string): Summand[] => {
+    const summands: Summand[] = [];
     let currExp = "";
     let prevOp = true;
     if (s[0] === '-') {
@@ -56,19 +57,19 @@ const parseExpressionMDs = (s: string): ExpressionMD[] => {
     }
     for (const token of s.split('')) {
         if (token === '+') {
-            expressions.push(new ExpressionMD(prevOp, currExp));
+            summands.push(new Summand(prevOp, currExp));
             prevOp = true
             currExp = "";
         } else if (token === '-') {
-            expressions.push(new ExpressionMD(prevOp, currExp));
+            summands.push(new Summand(prevOp, currExp));
             prevOp = false;
             currExp = "";
         } else {
             currExp += token;
         }
     }
-    expressions.push(new ExpressionMD(prevOp, currExp)); // last one
-    return expressions;
+    summands.push(new Summand(prevOp, currExp)); // last token
+    return summands;
 }
 
 export { isValidCommand, evaluate };
