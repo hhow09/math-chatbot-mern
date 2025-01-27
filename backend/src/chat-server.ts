@@ -42,6 +42,8 @@ export class ChatServer {
                 try {
                     const history = await this.commandService.getHistory(socket.id);
                     sessionLogger.info(`Returning history: ${JSON.stringify(history)}`);
+                    // There is no need to run JSON.stringify() on objects as it (socket.io) will be done for you.
+                    // ref: https://socket.io/docs/v4/emitting-events/#basic-emit
                     socket.emit('history', history);
                 } catch (error) {
                     this.handleSocketError(socket, sessionLogger, "history", error as Error);
