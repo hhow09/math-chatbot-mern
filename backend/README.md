@@ -61,6 +61,7 @@ src
     - however, additional cleanup logic is needed to remove old operations (e.g. cron job or [TTL Indexes](https://www.mongodb.com/docs/manual/core/index-ttl/))
     - moreover, mongodb document also suggests that **You should consider embedding for performance reasons if you have a collection with a large number of small documents.** (ref: [Collection Contains Large Number of Small Documents](https://www.mongodb.com/docs/manual/core/data-model-operations/#collection-contains-large-number-of-small-documents))
 - For the 2nd approach,
+    - also known as [Bucket Pattern](https://www.mongodb.com/docs/manual/data-modeling/design-patterns/group-data/bucket-pattern/)
     - We need to [Avoid Unbounded Arrays](https://www.mongodb.com/docs/manual/data-modeling/design-antipatterns/unbounded-arrays/) to grow over document size limit 16MB. However, only keeping the latest 10 operations should not be an issue.
     - write operation: there is out-of-box solution of [array push](https://www.mongodb.com/docs/manual/reference/operator/update/push/#mongodb-update-up.-push) with [$slice](https://www.mongodb.com/docs/manual/reference/operator/update/slice/) option in single operation.
     - read operation is also straightforward: simply query by `clientId`.
