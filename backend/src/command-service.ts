@@ -30,9 +30,6 @@ class CommandService implements ICommandService {
 
     // evaluate evaluate a mathematical expression
     private evaluate(expression: string): string {
-        if (!isValidCommand(expression)) {
-            throw new Error('Invalid command');
-        }
         return evaluate(expression);
     }
 }
