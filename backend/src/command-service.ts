@@ -1,7 +1,7 @@
 import { Logger } from "pino";
 import { CommandAndResult } from "./entities/command-result.entity";
 import { IRepository } from "./repositories";
-import { isValidCommand, evaluate } from "./math/evaluate";
+import { evaluate } from "./math/evaluate";
 
 export interface ICommandService {
     evaluateAndSave(clientId: string, expression: string): Promise<string>;
@@ -30,9 +30,6 @@ class CommandService implements ICommandService {
 
     // evaluate evaluate a mathematical expression
     private evaluate(expression: string): string {
-        if (!isValidCommand(expression)) {
-            throw new Error('Invalid command');
-        }
         return evaluate(expression);
     }
 }

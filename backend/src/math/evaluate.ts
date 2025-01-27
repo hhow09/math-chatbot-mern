@@ -1,33 +1,44 @@
 import { Summand } from './types';
 const operators = new Set(['+', '-', '*', '/']);
 
-// isValidCommand checks if the command is a allowed mathematical expression
-function isValidCommand(s: string): boolean {
-    s = s.replace(/ /g,''); // remove all spaces
-    if (s.length === 0) {
+// isValidOperation checks if the operation is a allowed mathematical expression
+function isValidOperation(operation: string): boolean {
+    const cleanedOperation = operation.replace(/ /g,''); // remove all spaces
+    if (cleanedOperation.length === 0) {
         return false;
     }
-    // allowed characters: 0-9, +, -, *, /, .
-    const regex = /^[\d+\-*/.]+$/;
-    if (!regex.test(s)) {
+    if (!allowedChars(cleanedOperation)) {
         return false;
     }
-    // operators cannot be adjacent to each other
-    for (let i = 0; i < s.length - 1; i++) {
-        if (operators.has(s[i]) && operators.has(s[i + 1])) {
-            return false;
-        }
+    if (!noAdjacentOperators(cleanedOperation)) {
+        return false;
     }
-    // operators cannot be at the end of the string
-    if (operators.has(s[s.length - 1])) {
+    if (noOperatorsAtTheEnd(cleanedOperation)) {
         return false;
     }
     return true;
 }
 
+function allowedChars(operation: string): boolean {
+    return /^[\d+\-*/.]+$/.test(operation);
+}
+
+function noAdjacentOperators(operation: string): boolean {
+    for (let i = 0; i < operation.length - 1; i++) {
+        if (operators.has(operation[i]) && operators.has(operation[i + 1])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function noOperatorsAtTheEnd(operation: string): boolean {
+    return operators.has(operation[operation.length - 1]);
+}
+
 // evaluate evaluate a mathematical expression
 function evaluate(s: string): string {
-    if (!isValidCommand(s)) {
+    if (!isValidOperation(s)) {
         throw new Error('Invalid command');
     }
     s = s.replace(/ /g,''); // remove all spaces
@@ -72,4 +83,4 @@ const parseExpression = (s: string): Summand[] => {
     return summands;
 }
 
-export { isValidCommand, evaluate };
+export { evaluate };

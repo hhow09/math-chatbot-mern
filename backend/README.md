@@ -48,6 +48,8 @@ src
     ├── chat-repo.ts
     └── index.ts
 ```
+- dependency injection is used to decouple components for (1) separation of concerns and (2) better testability.
+- hierarchy: app -> chat-server -> command-service -> chat-repo -> mongodb
 
 ## MongoDB Data Modeling
 - Based on the requirement of `history` command (the only read operation), the data needed to be persisted is `clientId`, `operation`, and `result`.
@@ -91,4 +93,4 @@ src
     - e.g. `5 * -3` will return error.
 - large number will be converted to exponential notation: e.g. `999999999999 * 999999999999` will return `9.99999999998e+23`
     - default threshold of exponent is `20`
-    - ref: https://mikemcl.github.io/decimal.js/#precision
+    - ref: https://mikemcl.github.io/decimal.js/#toExpPos

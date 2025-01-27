@@ -79,7 +79,7 @@ export class Fraction {
     }
 
     public add(f: Fraction): Fraction {
-        const commonDenominator = getLcm(this.denominator, f.denominator);
+        const commonDenominator = getLowestCommonMultiple(this.denominator, f.denominator);
         const multiplyThis = commonDenominator.div(this.denominator);
         const multiplyF = commonDenominator.div(f.denominator);
         this.numerator = this.numerator.mul(multiplyThis);
@@ -95,16 +95,16 @@ export class Fraction {
     }
 }
 
-function getLcm(a: Decimal, b: Decimal): Decimal {
-    return a.mul(b).div(getGcd(a, b));
+function getLowestCommonMultiple(a: Decimal, b: Decimal): Decimal {
+    return a.mul(b).div(getGreatestCommonDivisor(a, b));
 }
 
-function getGcd(a: Decimal, b: Decimal): Decimal {
+function getGreatestCommonDivisor(a: Decimal, b: Decimal): Decimal {
     const max = Decimal.max(a, b);
     const min = Decimal.min(a, b);
     if (max.mod(min).eq(0)) {
         return min;
     } else {
-        return getGcd(max.mod(min), min);
+        return getGreatestCommonDivisor(max.mod(min), min);
     }
 }
