@@ -9,7 +9,7 @@ describe("App Integration Test", () => {
     let chatServer: ChatServer;
     let mongoClient: MongoClient;
     let clientSocket: ClientSocket;
-    let close: () => void;
+    let close: () => Promise<void>;
     const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017";
     const serverPort = 3001;
     const serverUri = `http://localhost:${serverPort}`;

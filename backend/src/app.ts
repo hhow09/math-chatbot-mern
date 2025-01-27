@@ -19,17 +19,21 @@ function connectMongo(uri: string): Promise<MongoClient> {
 }
 
 async function main() {
-    const logger = pino();
+    // setup connection
+    // fail first if connection fail
     const mongoClient = await connectMongo(uri);
+
+    // construct component
+    const logger = pino();
     const collection = await getMongoCollection(mongoClient, dbName, collectionName);
     const commandService = new CommandService(logger, new ChatRepo(collection));
     const chatServer = new ChatServer(logger, commandService, 3000);
-    const serverClose = await chatServer.listen();
+    const serverClose = chatServer.listen();
 
     // graceful shutdown
-    const shutdown = () => {
-        serverClose();
-        mongoClient.close();
+    const shutdown = async () => {
+        await serverClose();
+        await mongoClient.close();
     }
     process.on('SIGTERM', shutdown);
     process.on('SIGINT', shutdown);
